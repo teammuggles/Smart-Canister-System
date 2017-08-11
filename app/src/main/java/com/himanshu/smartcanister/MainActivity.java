@@ -1,5 +1,6 @@
 package com.himanshu.smartcanister;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.himanshu.smartcanister.models.MessageEvent;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Your canisters");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,8 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivityForResult(new Intent(MainActivity.this,DetailedCanisterActivity.class),1);
             }
         });
 
@@ -117,6 +120,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         canisterAdapter.notifyDatasetChanged();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1 && resultCode==RESULT_OK)
+        {
+
+        }
+    }
 
     @Override
     public void onStop() {
@@ -152,10 +164,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
 
         }
-        else if(item.getTitle().equals("Update Profile"))
-        {
-
-        }
         else if(item.getTitle().equals("Log Out"))
         {
             FirebaseAuth.getInstance().signOut();
@@ -174,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event)

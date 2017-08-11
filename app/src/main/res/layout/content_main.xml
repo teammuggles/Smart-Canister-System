@@ -5,6 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:clipToPadding="false"
     tools:context="com.himanshu.smartcanister.MainActivity">
 
@@ -30,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="56dp"
-            android:animateLayoutChanges="true"
+            android:animateLayoutChanges="false"
             android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

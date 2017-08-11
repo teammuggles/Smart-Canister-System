@@ -11,4 +11,9 @@
     <color name="colorSlide1B">#311B92</color>
     <color name="colorSlide2B">#004D40</color>
     <color name="colorSlide3B">#880E4F</color>
+
+    <color name="red">#F44336</color>
+    <color name="blue">#2196F3</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="green">#4CAF50</color>
 </resources>
