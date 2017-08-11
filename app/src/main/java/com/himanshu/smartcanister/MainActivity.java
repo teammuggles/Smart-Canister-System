@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event)
     {
-        System.out.println("asdasdasdasdasd");
         if(event.message.equals("visibilitylogic"))
         {
             addSmartCanisterText.setVisibility(event.visibility);
