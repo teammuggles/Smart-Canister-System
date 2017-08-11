@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "250973704361",
+    "firebase_url": "https://smart-canister.firebaseio.com",
+    "project_id": "smart-canister",
+    "storage_bucket": "smart-canister.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250973704361:android:274cde534701e5ec",
+        "android_client_info": {
+          "package_name": "com.himanshu.smartcanister"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250973704361-6ejupl8hk5m39j2uja07ctv3c7gslqtu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.himanshu.smartcanister",
+            "certificate_hash": "f01c231797c9af71621d82c3d047b0f36ae81761"
+          }
+        },
+        {
+          "client_id": "250973704361-47ivo43qqmhrs77k245gv273uhc4r7e9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDl9gcsT1nXhllrJeUw1yTHgDAfjEtgqU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250973704361-47ivo43qqmhrs77k245gv273uhc4r7e9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
