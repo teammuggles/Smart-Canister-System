@@ -4,11 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorSlide1">#F0D4FB</color>
-    <color name="colorSlide2">#303F9F</color>
+    <color name="colorSlide1">#673AB7</color>
+    <color name="colorSlide2">#009688</color>
     <color name="colorSlide3">#FF4081</color>
 
-    <color name="colorSlide1B">#F0D4FB</color>
-    <color name="colorSlide2B">#303F9F</color>
-    <color name="colorSlide3B">#FF4081</color>
+    <color name="colorSlide1B">#311B92</color>
+    <color name="colorSlide2B">#004D40</color>
+    <color name="colorSlide3B">#880E4F</color>
 </resources>

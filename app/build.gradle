@@ -36,5 +36,6 @@ dependencies {
     compile 'agency.tango.android:material-intro-screen:0.0.5'
 
     testCompile 'junit:junit:4.12'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 apply plugin: 'com.google.gms.google-services'

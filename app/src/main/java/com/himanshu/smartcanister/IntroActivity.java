@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Toast;
 
 import com.himanshu.smartcanister.utils.SharedPreferenceUtil;
 
@@ -43,8 +44,8 @@ public class IntroActivity extends MaterialIntroActivity
 
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.colorSlide1)
-                        .buttonsColor(R.color.colorSlide1B)
+                        .backgroundColor(R.color.colorSlide2)
+                        .buttonsColor(R.color.colorSlide2B)
                         .image(agency.tango.materialintroscreen.R.drawable.ic_next)
                         .title("title")
                         .description("Description")
@@ -52,21 +53,20 @@ public class IntroActivity extends MaterialIntroActivity
 
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.colorSlide1)
-                        .buttonsColor(R.color.colorSlide1B)
+                        .backgroundColor(R.color.colorSlide3)
+                        .buttonsColor(R.color.colorSlide3B)
                         .image(agency.tango.materialintroscreen.R.drawable.ic_next)
                         .title("title")
                         .description("Description")
-                        .build(),
-                new MessageButtonBehaviour(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        startActivity(new Intent(IntroActivity.this,LoginActivity.class));
-                        finish();
-                    }
-                }, "Get Started!"));
+                        .build());
 
         SharedPreferenceUtil.saveNewUser(context,false);
+    }
+
+    @Override
+    public void onFinish()
+    {
+        super.onFinish();
+        startActivity(new Intent(IntroActivity.this,LoginActivity.class));
     }
 }
