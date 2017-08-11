@@ -2,23 +2,38 @@ package com.himanshu.smartcanister;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.himanshu.smartcanister.models.Canister;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-Button signOut;
+
+    TextView addSmartCanisterText;
+    CanisterAdapter canisterAdapter;
+    ArrayList<Canister> canisterList=new ArrayList<>();
+    RecyclerView canisterRecycleView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        signOut= (Button) findViewById(R.id.bt_signOut);
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
+        setContentView(R.layout.content_main);
+
+        addSmartCanisterText=(TextView)findViewById(R.id.addSmartCanisterText);
+
+        canisterRecycleView=(RecyclerView) findViewById(R.id.canisterRecyclerView);
+        canisterAdapter = new CanisterAdapter(canisterList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        canisterRecycleView.setLayoutManager(mLayoutManager);
+        canisterRecycleView.setItemAnimator(new DefaultItemAnimator());
+        canisterRecycleView.setAdapter(canisterAdapter);
+
+        canisterList.add(new Canister("Sugar","70%",""));
+        canisterList.add(new Canister("Oats","55%",""));
+        canisterAdapter.notifyDataSetChanged();
     }
 }
