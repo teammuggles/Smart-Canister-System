@@ -134,51 +134,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+    public boolean onNavigationItemSelected(MenuItem item) {
 
-        return true;
-    }
+        if(item.getTitle().equals("Lifestyle"))
+        {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        }
+        else if(item.getTitle().equals("Recipes"))
+        {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_signOut) {
+        }
+        else if(item.getTitle().equals("My Cart"))
+        {
+
+        }
+        else if(item.getTitle().equals("Update Profile"))
+        {
+
+        }
+        else if(item.getTitle().equals("Log Out"))
+        {
             FirebaseAuth.getInstance().signOut();
             finish();
             startActivity(new Intent(MainActivity.this,LoginActivity.class));
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        else if(item.getTitle().equals("Developers"))
+        {
 
         }
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
