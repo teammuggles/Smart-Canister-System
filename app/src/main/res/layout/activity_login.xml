@@ -56,11 +56,10 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="43dp"
-        android:text="Button"
-        tools:text="Sign In"
         android:layout_below="@+id/et_pass"
-        android:layout_toStartOf="@+id/tv_head" />
+        android:layout_marginTop="43dp"
+        android:layout_toStartOf="@+id/tv_head"
+        android:text="Sign In" />
 
     <Button
         android:id="@+id/bt_signUp"
@@ -69,18 +68,16 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/bt_signIn"
         android:layout_toEndOf="@+id/tv_head"
-        android:text="Button"
-        tools:text="Sign Up" />
+        android:text="SIGN UP" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="TextView"
-        android:textSize="20sp"
-        tools:text="OR"
-        android:textStyle="bold"
         android:layout_below="@+id/bt_signIn"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="OR"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </RelativeLayout>

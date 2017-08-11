@@ -43,7 +43,7 @@ import static com.google.firebase.auth.FirebaseAuth.*;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    private AuthStateListener mAuthstatelistener;
+    private FirebaseAuth.AuthStateListener mAuthstatelistener;
     EditText email1,password1,password2,name;
     Button register;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -126,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Successfully Signed Up", Toast.LENGTH_LONG).show();
                         upload();
                     } else if (!task.isSuccessful()) {
-                        Toast.makeText(RegisterActivity.this, "Signing Up Failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, task.getException().toString(), Toast.LENGTH_LONG).show();
                         mprogressdialog.dismiss();
                     }
                 }

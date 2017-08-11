@@ -1,5 +1,6 @@
 package com.himanshu.smartcanister;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private TextView head;
     private EditText email,password;
     private Button signIn,signUp;
-
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +149,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public void signInFirebase()
     {
+        progressDialog=new ProgressDialog(this);
        String emailText=email.getText().toString();
        String passText=password.getText().toString();
         if(TextUtils.isEmpty(emailText)||TextUtils.isEmpty(passText))
@@ -155,11 +157,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Toast.makeText(LoginActivity.this,"Fields are empty",Toast.LENGTH_SHORT).show();
         }
         else {
+            progressDialog.setMessage("Signing In...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
             mAuth.signInWithEmailAndPassword(emailText, passText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
-                    {
+                    {   progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
 
                     }
