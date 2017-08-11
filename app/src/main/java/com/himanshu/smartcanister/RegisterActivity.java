@@ -156,6 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mprogressdialog.dismiss();
                 }
                 else {
+                    mprogressdialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Data Update Failed", Toast.LENGTH_LONG).show();
                 }
             }

@@ -2,6 +2,8 @@ package com.himanshu.smartcanister;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +29,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     GoogleApiClient mGoogleApiClient;
@@ -37,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private EditText email,password;
     private Button signIn,signUp;
     private ProgressDialog progressDialog;
+    private GoogleSignInAccount account;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     {
         if(result.isSuccess())
         {
-            GoogleSignInAccount account=result.getSignInAccount();
+            account=result.getSignInAccount();
             firebaseAuthWithGoogle(account);
 
 
@@ -123,6 +130,41 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
+                    final ProgressDialog progressDialog=new ProgressDialog(LoginActivity.this);
+                    progressDialog.setMessage("Signing In..");
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.show();
+                    String name=account.getDisplayName();
+                    String email=account.getEmail();
+                    Uri photoUri=account.getPhotoUrl();
+                    String photo=photoUri.toString();
+                    DatabaseReference userLocation= FirebaseDatabase.getInstance().getReference();
+                    FirebaseUser current = FirebaseAuth.getInstance().getCurrentUser();
+                    String curr = current.getUid();
+                    DatabaseReference mDatabase=userLocation.child("Users").child(curr);
+                    HashMap<String,String> data = new HashMap<>();
+                    data.put("Name",name);
+
+                    data.put("Email",email);
+
+                    data.put("Image",photo);
+                    mDatabase.setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+
+                                Toast.makeText(LoginActivity.this, "Data Updated Succesfully", Toast.LENGTH_LONG).show();
+
+                            }
+                            else {
+
+                                Toast.makeText(LoginActivity.this, "Data Update Failed", Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                    });
+
+                    progressDialog.dismiss();
                     finish();
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 }
