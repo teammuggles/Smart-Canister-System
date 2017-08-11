@@ -1,5 +1,6 @@
 package com.himanshu.smartcanister;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -30,7 +31,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.himanshu.smartcanister.models.MessageEvent;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -45,20 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
-
-        addSmartCanisterText=(TextView)findViewById(R.id.addSmartCanisterText);
-
-        canisterRecycleView=(RecyclerView) findViewById(R.id.canisterRecyclerView);
-        canisterAdapter = new CanisterAdapter(canisterList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        canisterRecycleView.setLayoutManager(mLayoutManager);
-        canisterRecycleView.setItemAnimator(new DefaultItemAnimator());
-        canisterRecycleView.setAdapter(canisterAdapter);
-
-        canisterList.add(new Canister("Sugar","70%",""));
-        canisterList.add(new Canister("Oats","55%",""));
-        canisterAdapter.notifyDataSetChanged();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,6 +102,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         });
 
+        EventBus.getDefault().register(this);
+
+        addSmartCanisterText=(TextView)findViewById(R.id.addSmartCanisterText);
+
+        canisterRecycleView=(RecyclerView) findViewById(R.id.canisterRecyclerView);
+        canisterAdapter = new CanisterAdapter(canisterList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        canisterRecycleView.setLayoutManager(mLayoutManager);
+        canisterRecycleView.setItemAnimator(new DefaultItemAnimator());
+        canisterRecycleView.setAdapter(canisterAdapter);
+
+        canisterList.add(new Canister("Sugar","70%",""));
+        canisterAdapter.notifyDatasetChanged();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -170,5 +183,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event)
+    {
+        System.out.println("asdasdasdasdasd");
+        if(event.message.equals("visibilitylogic"))
+        {
+            addSmartCanisterText.setVisibility(event.visibility);
+        }
     }
 }

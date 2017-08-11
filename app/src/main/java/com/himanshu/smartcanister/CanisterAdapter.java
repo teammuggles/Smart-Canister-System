@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.himanshu.smartcanister.models.Canister;
+import com.himanshu.smartcanister.models.MessageEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -58,5 +61,17 @@ public class CanisterAdapter extends RecyclerView.Adapter<CanisterAdapter.MyView
     public int getItemCount()
     {
         return canisterList.size();
+    }
+
+    public void notifyDatasetChanged()
+    {
+        System.out.println("asdasdasdasdasd");
+
+        if(getItemCount()>0)
+            EventBus.getDefault().post(new MessageEvent("visibilitylogic",View.INVISIBLE));
+        else
+            EventBus.getDefault().post(new MessageEvent("visibilitylogic",View.VISIBLE));
+
+        notifyDataSetChanged();
     }
 }
