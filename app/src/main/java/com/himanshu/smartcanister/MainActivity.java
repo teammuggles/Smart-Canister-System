@@ -1,5 +1,6 @@
 package com.himanshu.smartcanister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,17 +13,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        mAuth= FirebaseAuth.getInstance();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +53,36 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+        final CircleImageView profile = (CircleImageView)hView.findViewById(R.id.iv_image);
+        final TextView uemail = (TextView)hView.findViewById(R.id.tv_email);
+        final TextView uname= (TextView) hView.findViewById(R.id.tv_name);
+
         navigationView.setNavigationItemSelectedListener(this);
+        FirebaseUser current = mAuth.getCurrentUser();
+        String currentuser = current.getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabase = database.getReference().child("Users").child(currentuser);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("Name").getValue().toString();
+                String image = dataSnapshot.child("Image").getValue().toString();
+                String email=dataSnapshot.child("Email").getValue().toString();
+                Picasso.with(MainActivity.this).load(image).into(profile);
+                uname.setText(name);
+                uemail.setText(email);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this,"Database Error",Toast.LENGTH_LONG).show();
+            }
+
+
+        });
+
     }
 
     @Override
@@ -56,6 +99,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -67,7 +111,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_signOut) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            startActivity(new Intent(MainActivity.this,LoginActivity.class));
             return true;
         }
 
