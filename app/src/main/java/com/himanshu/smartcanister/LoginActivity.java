@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -28,13 +32,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SignInButton signInButton;
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN=1;
+    private TextView head;
+    private EditText email,password;
+    private Button signIn,signUp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth=FirebaseAuth.getInstance();
         signInButton= (SignInButton) findViewById(R.id.sign_in_button);
+        signIn = (Button) findViewById(R.id.bt_signIn);
+        signUp = (Button) findViewById(R.id.bt_signUp);
+        email= (EditText) findViewById(R.id.et_name);
+        password= (EditText) findViewById(R.id.et_pass);
         signInButton.setOnClickListener(this);
+        signIn.setOnClickListener(this);
+        signUp.setOnClickListener(this);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -55,10 +69,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.sign_in_button)
-        {
-            signIn();
-        }
+       switch (v.getId())
+       {
+           case R.id.sign_in_button:
+               signIn();
+               break;
+
+           case R.id.bt_signIn:
+               signInFirebase();
+               break;
+
+           case R.id.bt_signUp:
+               signUp();
+               break;
+       }
     }
 
     public void signIn()
@@ -117,5 +141,36 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             startActivity(new Intent(LoginActivity.this,MainActivity.class));
     }
 
+    public void signUp()
+    {
+             startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+    }
+
+    public void signInFirebase()
+    {
+       String emailText=email.getText().toString();
+       String passText=password.getText().toString();
+        if(TextUtils.isEmpty(emailText)||TextUtils.isEmpty(passText))
+        {
+            Toast.makeText(LoginActivity.this,"Fields are empty",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mAuth.signInWithEmailAndPassword(emailText, passText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful())
+                    {
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+
+                    }
+                    else
+                    {
+                        Toast.makeText(LoginActivity.this,"Authentication Failed",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+    }
 
 }

@@ -25,12 +25,12 @@
         android:text="Smart Canister"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="#866593 "
+        android:textColor="#866593"
         android:textSize="24sp"
         android:textStyle="bold|italic" />
 
     <EditText
-        android:id="@+id/et_email"
+        android:id="@+id/et_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_head"
@@ -44,8 +44,8 @@
         android:id="@+id/et_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/et_email"
-        android:layout_below="@+id/et_email"
+        android:layout_alignStart="@+id/et_name"
+        android:layout_below="@+id/et_name"
         android:layout_marginTop="36dp"
         android:ems="10"
         android:hint="Password"
