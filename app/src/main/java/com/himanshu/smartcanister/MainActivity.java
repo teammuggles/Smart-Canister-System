@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             canisterList.add(new Canister("Oats",String.valueOf(dataSnapshot.getValue(Float.class)),
                                     "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
                             canisterAdapter.notifyDatasetChanged();
-                            Toast.makeText(MainActivity.this,0+"", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,"Your Consumed "+0+"with respect to your previous consumption", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         else if(count==noOats-1) {
