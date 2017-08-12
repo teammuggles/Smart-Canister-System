@@ -55,6 +55,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.himanshu.smartcanister.models.MessageEvent;
+import com.himanshu.smartcanister.utils.CartActivity;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String curr = mAuth.getCurrentUser().getUid().toString();
 
         mDatabase=FirebaseDatabase.getInstance().getReference().child("Canisters").child(curr);
-        FirebaseDatabase.getInstance().getReference().child("Canisters").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).child("oats").push().setValue(9);
+
 
 
         EventBus.getDefault().register(this);
@@ -223,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         else if(position==1)
                         {
                             enterIntoFirebase("oats");
-                            //canisterList.add(new Canister("Oats","100%",
-                                    //"https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
+
+                            //canisterList.add(new Canister("Oats","100%", "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
                         }
                         else if(position==2)
                         {
@@ -329,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(item.getTitle().equals("My Cart"))
         {
+            startActivity(new Intent(MainActivity.this, CartActivity.class));
 
         }
         else if(item.getTitle().equals("Log Out"))

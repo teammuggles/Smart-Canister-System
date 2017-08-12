@@ -25,7 +25,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DetailedCanisterActivity"></activity>
+        <activity android:name=".DetailedCanisterActivity" />
+        <activity android:name=".utils.CartActivity"></activity>
     </application>
 
 </manifest>
