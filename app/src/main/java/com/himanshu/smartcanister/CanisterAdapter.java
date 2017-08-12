@@ -1,6 +1,7 @@
 package com.himanshu.smartcanister;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,6 +54,12 @@ public class CanisterAdapter extends RecyclerView.Adapter<CanisterAdapter.MyView
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View canisterView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_canister, parent, false);
+        canisterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context,DetailedCanisterActivity.class));
+            }
+        });
         return new MyViewHolder(canisterView);
     }
 
@@ -63,9 +70,14 @@ public class CanisterAdapter extends RecyclerView.Adapter<CanisterAdapter.MyView
         holder.contentNameText.setText(canister.getContentName());
         holder.percentageLeftText.setText(canister.getPercentageLeft());
         Picasso.with(context).load(Uri.parse(canister.getImageurl())).into(holder.canisterImage);
-        holder.deleteButton.setOnClickListener((v)->{
-            canisterList.remove(position);
-            notifyDatasetChanged();
+
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canisterList.remove(position);
+                notifyDatasetChanged();
+            }
         });
     }
 

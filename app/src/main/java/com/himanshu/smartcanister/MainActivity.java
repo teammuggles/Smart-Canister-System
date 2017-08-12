@@ -1,13 +1,23 @@
 package com.himanshu.smartcanister;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.EditText;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +39,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.himanshu.smartcanister.models.Canister;
 
 import java.util.ArrayList;
@@ -55,17 +68,27 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
-
+    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseOats;
     TextView addSmartCanisterText;
     CanisterAdapter canisterAdapter;
     ArrayList<Canister> canisterList=new ArrayList<>();
+    private static ArrayList<Canister> cannisterListTemp1;
+    private static int count=0;
     RecyclerView canisterRecycleView;
-
+    long noOats;
+    float distance1,distance2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Your canisters");
         setContentView(R.layout.activity_main);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String curr = mAuth.getCurrentUser().getUid().toString();
+
+        mDatabase=FirebaseDatabase.getInstance().getReference().child("Canisters").child(curr);
+        FirebaseDatabase.getInstance().getReference().child("Canisters").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).child("oats").push().setValue(9);
 
 
         EventBus.getDefault().register(this);
@@ -80,14 +103,95 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         canisterRecycleView.setAdapter(canisterAdapter);
 
         //canisterList.add(new Canister("Sugar","70%",""));
-        canisterAdapter.notifyDatasetChanged();
+        //canisterAdapter.notifyDatasetChanged();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth= FirebaseAuth.getInstance();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+         mDatabaseOats=mDatabase.child("oats");
+        DatabaseReference mDatabaseIdOats=mDatabase.child("oats");
+        mDatabaseIdOats.addValueEventListener(new ValueEventListener() {
             @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                 noOats=dataSnapshot.getChildrenCount();
+                Toast.makeText(MainActivity.this,noOats+"",Toast.LENGTH_SHORT).show();
+                mDatabaseOats.addChildEventListener(new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        count++;
+                        if(noOats==1)
+                        {
+                            canisterList.add(new Canister("Oats",String.valueOf(dataSnapshot.getValue(Float.class)),
+                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
+                            canisterAdapter.notifyDatasetChanged();
+                            Toast.makeText(MainActivity.this,0+"", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else if(count==noOats-1) {
+                            //if(count==dataSnapshot.getChildrenCount()-1) {
+                            distance1 = dataSnapshot.getValue(Float.class);
+                        }
+                        //else if(count==dataSnapshot.getChildrenCount())
+                        //{
+                        else if(count==noOats){
+                            distance2 = dataSnapshot.getValue(Float.class);
+                            float consumption=distance1-distance2;
+                            Toast.makeText(MainActivity.this,consumption+"", Toast.LENGTH_SHORT).show();
+                            String percentage=String.valueOf(distance2);
+                            Canister canisterTemp=new Canister("Oats",percentage,
+                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd");
+                            canisterList.add(canisterTemp);
+                            canisterAdapter.notifyDatasetChanged();
+                            getNotification();
+                        }
+                        //}
+
+
+
+
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+
             public void onClick(View view)
             {
                 final Dialog dialog = new Dialog(MainActivity.this);
@@ -97,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 Spinner dialogspinner = (Spinner) dialog.findViewById(R.id.contentspinner);
                 List<String> spinnerArray =  new ArrayList<String>();
+                spinnerArray.add("Select");
                 spinnerArray.add("Oats");
                 spinnerArray.add("Almonds");
                 spinnerArray.add("Dal");
@@ -113,26 +218,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     {
                         if(position==0)
                         {
-                            canisterList.add(new Canister("Oats","100%",
-                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
+                            return;
                         }
                         else if(position==1)
+                        {
+                            enterIntoFirebase("oats");
+                            //canisterList.add(new Canister("Oats","100%",
+                                    //"https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
+                        }
+                        else if(position==2)
                         {
                             canisterList.add(new Canister("Almonds", "100%",
                                     "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/almonds.jpg?alt=media&token=4634044e-7ee6-4212-b8aa-a5c0a5a9a75a"));
                         }
-                        else if(position==2)
+                        else if(position==3)
                         {
                             canisterList.add(new Canister("Dal", "100%",
                                     "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/dal-fry-recipe1.jpg?alt=media&token=b3f86301-e16c-4671-beee-a31a947d1547"));
                         }
-                        else if(position==3)
+                        else if(position==4)
                         {
                             canisterList.add(new Canister("Rice","100%",
                                     "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/rice-625_625x350_71426749881.jpg?alt=media&token=5b2e0c61-72bc-4cf6-88a6-365cba998326"));
                         }
                         canisterAdapter.notifyDatasetChanged();
-                        //dialog.cancel();
+                        dialog.dismiss();
 
                     }
 
@@ -249,5 +359,84 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             addSmartCanisterText.setVisibility(event.visibility);
         }
+    }
+
+    public void enterIntoFirebase(String ingredient)
+    {
+
+
+                        mDatabase.child(ingredient).push().setValue(100.0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful())
+                                {
+                                    Toast.makeText(MainActivity.this,"Added..",Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(MainActivity.this,"Seems..there is a Problem With your Internet",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+
+    }
+
+    public void addToCart()
+    {
+        FirebaseDatabase.getInstance().getReference().child("Cart").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).push().setValue("OATS").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(!task.isSuccessful())
+                {
+                    Toast.makeText(MainActivity.this,task.getException()+"",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void getNotification() {
+
+        android.support.v4.app.NotificationCompat.Builder builder;
+        Intent notificationIntent;
+        PendingIntent contentIntent;
+        NotificationManager manager;
+        if (distance2 <=20 && distance2 > 10) {
+
+            builder = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_menu_manage)
+                            .setContentTitle("Smart Canister Notification")
+                            .setContentText("Low Level.Time to Replenish. Only 20% left!");
+
+            notificationIntent = new Intent(this, MainActivity.class);
+            contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(contentIntent);
+
+            // Add as notification
+            manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(0, builder.build());
+        }
+
+
+            else
+                {
+                builder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_menu_manage)
+                        .setContentTitle("Smart Canister Notification")
+                        .setContentText("Low Level.Time to Replenish. Only 10% left!....Item Added to Cart");
+
+                notificationIntent = new Intent(this, MainActivity.class);
+                contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(contentIntent);
+
+                // Add as notification
+                manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.notify(0, builder.build());
+                addToCart();
+
+        }
+
     }
 }
