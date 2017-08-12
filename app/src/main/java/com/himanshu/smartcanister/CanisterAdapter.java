@@ -1,5 +1,6 @@
 package com.himanshu.smartcanister;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.himanshu.smartcanister.models.Canister;
 import com.himanshu.smartcanister.models.MessageEvent;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,9 +27,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CanisterAdapter extends RecyclerView.Adapter<CanisterAdapter.MyViewHolder>
 {
     private ArrayList<Canister> canisterList;
+    Context context;
 
-    public CanisterAdapter(ArrayList<Canister> canisterList)
+    public CanisterAdapter(Context context,ArrayList<Canister> canisterList)
     {
+        this.context=context;
         this.canisterList=canisterList;
     }
 
@@ -58,7 +62,7 @@ public class CanisterAdapter extends RecyclerView.Adapter<CanisterAdapter.MyView
         Canister canister = canisterList.get(position);
         holder.contentNameText.setText(canister.getContentName());
         holder.percentageLeftText.setText(canister.getPercentageLeft());
-        holder.canisterImage.setImageURI(Uri.parse(canister.getImageurl()));
+        Picasso.with(context).load(Uri.parse(canister.getImageurl())).into(holder.canisterImage);
         holder.deleteButton.setOnClickListener((v)->{
             canisterList.remove(position);
             notifyDatasetChanged();

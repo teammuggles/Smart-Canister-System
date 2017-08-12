@@ -1,5 +1,6 @@
 package com.himanshu.smartcanister;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,12 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +32,8 @@ import android.widget.Toast;
 import com.himanshu.smartcanister.models.Canister;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -57,14 +66,84 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setTitle("Your canisters");
         setContentView(R.layout.activity_main);
+
+
+        EventBus.getDefault().register(this);
+
+        addSmartCanisterText=(TextView)findViewById(R.id.addSmartCanisterText);
+
+        canisterRecycleView=(RecyclerView) findViewById(R.id.canisterRecyclerView);
+        canisterAdapter = new CanisterAdapter(this,canisterList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        canisterRecycleView.setLayoutManager(mLayoutManager);
+        canisterRecycleView.setItemAnimator(new DefaultItemAnimator());
+        canisterRecycleView.setAdapter(canisterAdapter);
+
+        //canisterList.add(new Canister("Sugar","70%",""));
+        canisterAdapter.notifyDatasetChanged();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth= FirebaseAuth.getInstance();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(MainActivity.this,DetailedCanisterActivity.class),1);
+            public void onClick(View view)
+            {
+                final Dialog dialog = new Dialog(MainActivity.this);
+
+                dialog.setContentView(R.layout.add_canister_dialog);
+                dialog.setTitle("Instructions:");
+                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                Spinner dialogspinner = (Spinner) dialog.findViewById(R.id.contentspinner);
+                List<String> spinnerArray =  new ArrayList<String>();
+                spinnerArray.add("Oats");
+                spinnerArray.add("Almonds");
+                spinnerArray.add("Dal");
+                spinnerArray.add("Rice");
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, spinnerArray);
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                dialogspinner.setAdapter(adapter);
+                dialogspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                    {
+                        if(position==0)
+                        {
+                            canisterList.add(new Canister("Oats","100%",
+                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
+                        }
+                        else if(position==1)
+                        {
+                            canisterList.add(new Canister("Almonds", "100%",
+                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/almonds.jpg?alt=media&token=4634044e-7ee6-4212-b8aa-a5c0a5a9a75a"));
+                        }
+                        else if(position==2)
+                        {
+                            canisterList.add(new Canister("Dal", "100%",
+                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/dal-fry-recipe1.jpg?alt=media&token=b3f86301-e16c-4671-beee-a31a947d1547"));
+                        }
+                        else if(position==3)
+                        {
+                            canisterList.add(new Canister("Rice","100%",
+                                    "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/rice-625_625x350_71426749881.jpg?alt=media&token=5b2e0c61-72bc-4cf6-88a6-365cba998326"));
+                        }
+                        canisterAdapter.notifyDatasetChanged();
+                        //dialog.cancel();
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent)
+                    {
+
+                    }
+                });
+
+                dialog.show();
             }
         });
 
@@ -105,30 +184,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         });
 
-        EventBus.getDefault().register(this);
-
-        addSmartCanisterText=(TextView)findViewById(R.id.addSmartCanisterText);
-
-        canisterRecycleView=(RecyclerView) findViewById(R.id.canisterRecyclerView);
-        canisterAdapter = new CanisterAdapter(canisterList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        canisterRecycleView.setLayoutManager(mLayoutManager);
-        canisterRecycleView.setItemAnimator(new DefaultItemAnimator());
-        canisterRecycleView.setAdapter(canisterAdapter);
-
-        canisterList.add(new Canister("Sugar","70%",""));
-        canisterAdapter.notifyDatasetChanged();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && resultCode==RESULT_OK)
-        {
-
-        }
-    }
 
     @Override
     public void onStop() {
