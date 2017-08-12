@@ -55,7 +55,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.himanshu.smartcanister.models.MessageEvent;
-import com.himanshu.smartcanister.utils.CartActivity;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -69,13 +68,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase1;
     private DatabaseReference mDatabaseOats;
     TextView addSmartCanisterText;
     CanisterAdapter canisterAdapter;
     ArrayList<Canister> canisterList=new ArrayList<>();
     private static ArrayList<Canister> cannisterListTemp1;
-    private static int count=0;
+    private static long count=0;
     RecyclerView canisterRecycleView;
     long noOats;
     float distance1,distance2;
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String curr = mAuth.getCurrentUser().getUid().toString();
 
-        mDatabase=FirebaseDatabase.getInstance().getReference().child("Canisters").child(curr);
+        mDatabase1=FirebaseDatabase.getInstance().getReference().child("Distance");
 
 
 
@@ -110,14 +109,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         mAuth= FirebaseAuth.getInstance();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-         mDatabaseOats=mDatabase.child("oats");
-        DatabaseReference mDatabaseIdOats=mDatabase.child("oats");
-        mDatabaseIdOats.addValueEventListener(new ValueEventListener() {
+         mDatabaseOats=mDatabase1.child("oats");
+        DatabaseReference mDatabaseIdOats=mDatabase1.child("oats");
+        mDatabase1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                  noOats=dataSnapshot.getChildrenCount();
                 Toast.makeText(MainActivity.this,noOats+"",Toast.LENGTH_SHORT).show();
-                mDatabaseOats.addChildEventListener(new ChildEventListener() {
+                mDatabase1.addChildEventListener(new ChildEventListener() {
 
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             canisterList.add(new Canister("Oats",String.valueOf(dataSnapshot.getValue(Float.class)),
                                     "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
                             canisterAdapter.notifyDatasetChanged();
-                            Toast.makeText(MainActivity.this,"Your Consumed "+0+"with respect to your previous consumption", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,0+"", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         else if(count==noOats-1) {
@@ -143,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             String percentage=String.valueOf(distance2);
                             Canister canisterTemp=new Canister("Oats",percentage,
                                     "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd");
+                            canisterList.clear();
                             canisterList.add(canisterTemp);
                             canisterAdapter.notifyDatasetChanged();
                             getNotification();
@@ -224,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         else if(position==1)
                         {
                             enterIntoFirebase("oats");
-
-                            //canisterList.add(new Canister("Oats","100%", "https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
+                            //canisterList.add(new Canister("Oats","100%",
+                                    //"https://firebasestorage.googleapis.com/v0/b/smart-canister.appspot.com/o/61BBuz1CBWL._SX522_.jpg?alt=media&token=986b1571-4aa3-486d-b91e-bec5e97b4acd"));
                         }
                         else if(position==2)
                         {
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this,"Database Error",Toast.LENGTH_LONG).show();
+
             }
 
 
@@ -326,12 +326,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(item.getTitle().equals("Recipes"))
         {
-
+startActivity(new Intent(this,webview.class));
         }
         else if(item.getTitle().equals("My Cart"))
         {
-            startActivity(new Intent(MainActivity.this, CartActivity.class));
-
+             startActivity(new Intent(MainActivity.this,CartActivity.class));
         }
         else if(item.getTitle().equals("Log Out"))
         {
@@ -367,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
 
 
-                        mDatabase.child(ingredient).push().setValue(100.0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        mDatabase1.push().setValue(100.0).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful())

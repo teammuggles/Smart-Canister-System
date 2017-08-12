@@ -8,8 +8,8 @@
     tools:layout_editor_absoluteY="81dp">
 
     <android.support.v7.widget.CardView
-        android:layout_width="368dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:elevation="5dp"
         card_view:cardCornerRadius="5dp"
         card_view:cardUseCompatPadding="true"
@@ -17,7 +17,8 @@
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintStart_toStartOf="parent"
         card_view:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="8dp">
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="5dp">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -28,47 +29,49 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="32dp" />
+                card_view:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/contentNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:text="content name"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
                 android:textSize="18sp"
                 card_view:layout_constraintStart_toEndOf="@+id/canisterImage"
-                card_view:layout_constraintTop_toTopOf="@+id/canisterImage"
-                tools:layout_editor_absoluteX="156dp" />
+                card_view:layout_constraintTop_toTopOf="@+id/canisterImage" />
 
             <TextView
                 android:id="@+id/percentageLeftText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="8dp"
                 android:text="percentage left"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
                 android:textSize="18sp"
                 card_view:layout_constraintStart_toStartOf="@+id/contentNameText"
-                card_view:layout_constraintTop_toBottomOf="@+id/contentNameText"
-                tools:layout_editor_absoluteX="156dp" />
+                card_view:layout_constraintTop_toBottomOf="@+id/contentNameText" />
 
             <ImageButton
                 android:id="@+id/deleteButton"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
                 card_view:srcCompat="@drawable/cross_dgrey"
-                tools:layout_editor_absoluteX="349dp" />
+                tools:layout_editor_absoluteX="324dp"
+                tools:layout_editor_absoluteY="0dp" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

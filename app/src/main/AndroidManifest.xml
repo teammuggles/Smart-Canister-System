@@ -26,7 +26,8 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DetailedCanisterActivity" />
-        <activity android:name=".utils.CartActivity"></activity>
+        <activity android:name=".webview" />
+        <activity android:name=".CartActivity"></activity>
     </application>
 
 </manifest>

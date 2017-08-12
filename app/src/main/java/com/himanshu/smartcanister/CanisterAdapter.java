@@ -54,24 +54,27 @@ public class CanisterAdapter extends RecyclerView.Adapter<CanisterAdapter.MyView
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View canisterView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_canister, parent, false);
-        canisterView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context,DetailedCanisterActivity.class));
-            }
-        });
+
         return new MyViewHolder(canisterView);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position)
     {
-        Canister canister = canisterList.get(position);
+        final Canister canister = canisterList.get(position);
         holder.contentNameText.setText(canister.getContentName());
         holder.percentageLeftText.setText(canister.getPercentageLeft());
         Picasso.with(context).load(Uri.parse(canister.getImageurl())).into(holder.canisterImage);
 
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context,DetailedCanisterActivity.class);
+                i.putExtra("content",canister.getContentName());
+                context.startActivity(i);
+            }
+        });
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

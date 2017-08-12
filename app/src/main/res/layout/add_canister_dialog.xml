@@ -9,13 +9,17 @@
         android:id="@+id/CanisterContentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Ingredients:"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textSize="18sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp" />
 
     <Spinner
         android:id="@+id/contentspinner"
@@ -23,9 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/CanisterContentTextView"
-        app:layout_constraintTop_toTopOf="@+id/CanisterContentTextView" />
+        app:layout_constraintTop_toTopOf="@+id/CanisterContentTextView"
+        tools:layout_editor_absoluteX="82dp" />
 </android.support.constraint.ConstraintLayout>
